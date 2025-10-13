@@ -1,0 +1,40 @@
+﻿<Window x:Class="_122_Zyamilov_Chzhen.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:_122_Zyamilov_Chzhen"
+        mc:Ignorable="d"
+        Title="ООО Тмывденег" Height="450" Width="800"
+        Loaded="Window_Loaded"
+        Closing="Window_Closing">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="45"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Background="{DynamicResource TopBottomBarBrush}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Content="Назад" Width="80" Height="30" Margin="10,0,0,0" Click="BackButton_Click" Grid.Column="0"/>
+
+            <Button x:Name="ThemeToggleButton" Content="Тёмная тема" Width="150" Height="30" Margin="0,0,10,0" Click="ThemeToggleButton_Click" Grid.Column="2"/>
+        </Grid>
+
+        <Grid Grid.Row="1" Background="{DynamicResource CenterBackground}">
+            <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden"/>
+        </Grid>
+
+        <Grid Grid.Row="2" Background="{DynamicResource TopBottomBarBrush}">
+            <TextBlock x:Name="DateTimeNow"
+                       HorizontalAlignment="Right"
+                       Margin="0,0,10,0"/>
+        </Grid>
+    </Grid>
+</Window>

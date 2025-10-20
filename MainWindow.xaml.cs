@@ -21,6 +21,8 @@ namespace _122_Zyamilov_Chzhen
             timer.Tick += (s, ev) =>
                 DateTimeNow.Text = DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss");
             timer.Start();
+
+            MainFrame.Navigate(new AuthPage());
         }
 
         private void ThemeToggleButton_Click(object sender, RoutedEventArgs e)

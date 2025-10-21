@@ -11,9 +11,23 @@
     <SolidColorBrush x:Key="TextBrush" Color="#EEEEEE"/>
 
     <!-- Новые цвета для полей ввода -->
-    <SolidColorBrush x:Key="InputBackground" Color="#2B2B2B"/>
+    <SolidColorBrush x:Key="InputBackground" Color="Black"/>
     <SolidColorBrush x:Key="InputForeground" Color="#FFFFFF"/>
     <SolidColorBrush x:Key="InputBorderBrush" Color="#555555"/>
+
+    <!-- Переопределение системных цветов для выделения (чтобы не было голубого) -->
+    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#FF8C00"/>
+    <!-- Оранжевый для выделения -->
+    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="White"/>
+    <!-- Белый текст на выделении -->
+    <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Black"/>
+    <!-- Чёрный для контроля -->
+    <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="White"/>
+    <!-- Белый текст в контроле -->
+    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="Black"/>
+    <!-- Фон окон/контролов чёрный -->
+    <SolidColorBrush x:Key="{x:Static SystemColors.WindowTextBrushKey}" Color="White"/>
+    <!-- Текст белый -->
 
     <!-- Window -->
     <Style TargetType="Window">
@@ -77,5 +91,113 @@
         <Setter Property="BorderBrush" Value="{StaticResource InputBorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Padding" Value="4"/>
+    </Style>
+
+    <!-- Шаблон для кнопки-стрелки (ToggleButton) -->
+    <ControlTemplate x:Key="ComboBoxToggleButtonTemplate" TargetType="{x:Type ToggleButton}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="20" />
+            </Grid.ColumnDefinitions>
+            <Border x:Name="Border" Grid.ColumnSpan="2" CornerRadius="2" BorderThickness="1" BorderBrush="{StaticResource InputBorderBrush}" Background="{StaticResource InputBackground}">
+                <!-- Чёрный фон, серый бордер -->
+            </Border>
+            <Border Grid.Column="0" CornerRadius="2,0,0,2" Margin="1" Background="{StaticResource InputBackground}" BorderBrush="{StaticResource InputBorderBrush}" BorderThickness="0,0,1,0" />
+            <Path x:Name="Arrow" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 0 L 4 4 L 8 0 Z" Fill="{StaticResource InputForeground}" />
+            <!-- Белая стрелка -->
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="Border" Property="Background" Value="#FF8C00" />
+                <!-- Оранжевый hover -->
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter TargetName="Border" Property="Background" Value="#E07B00" />
+                <!-- Тёмный оранжевый pressed -->
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter TargetName="Border" Property="Background" Value="#404040" />
+                <!-- Мутный серый disabled -->
+                <Setter TargetName="Arrow" Property="Fill" Value="#808080" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!-- Шаблон для editable TextBox (если ComboBox editable, но в твоём случае нет) -->
+    <ControlTemplate x:Key="ComboBoxTextBoxTemplate" TargetType="{x:Type TextBox}">
+        <Border x:Name="PART_ContentHost" Focusable="False" Background="{TemplateBinding Background}" />
+    </ControlTemplate>
+
+    <!-- Основной стиль и шаблон для ComboBox -->
+    <Style TargetType="{x:Type ComboBox}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.CanContentScroll" Value="True" />
+        <Setter Property="Background" Value="{StaticResource InputBackground}" />
+        <Setter Property="Foreground" Value="{StaticResource InputForeground}" />
+        <Setter Property="BorderBrush" Value="{StaticResource InputBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBox}">
+                    <Grid>
+                        <ToggleButton x:Name="ToggleButton" Template="{StaticResource ComboBoxToggleButtonTemplate}" Grid.Column="2" Focusable="False" IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press" />
+                        <ContentPresenter x:Name="ContentSite" IsHitTestVisible="False" Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" Margin="3,3,23,3" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                        <TextBox x:Name="PART_EditableTextBox" Template="{StaticResource ComboBoxTextBoxTemplate}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="3,3,23,3" Focusable="True" Background="{StaticResource InputBackground}" Foreground="{StaticResource InputForeground}" Visibility="Hidden" IsReadOnly="{TemplateBinding IsReadOnly}" />
+                        <Popup x:Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
+                            <Grid x:Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                <Border x:Name="DropDownBorder" BorderThickness="1" BorderBrush="{StaticResource InputBorderBrush}" Background="{StaticResource InputBackground}" />
+                                <!-- Чёрный dropdown с серым бордером -->
+                                <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                    <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                </ScrollViewer>
+                            </Grid>
+                        </Popup>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="#808080" />
+                            <!-- Серый текст disabled -->
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Стиль для элементов в dropdown (ComboBoxItem) -->
+    <Style TargetType="{x:Type ComboBoxItem}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Background" Value="{StaticResource InputBackground}" />
+        <!-- Чёрный фон -->
+        <Setter Property="Foreground" Value="{StaticResource InputForeground}" />
+        <!-- Белый текст -->
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                    <Border x:Name="Border" Padding="2" SnapsToDevicePixels="True" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                        <ContentPresenter />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsHighlighted" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="#FF8C00" />
+                            <!-- Оранжевый выделенный -->
+                            <Setter Property="Foreground" Value="White" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="#FF8C00" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="#808080" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 </ResourceDictionary>

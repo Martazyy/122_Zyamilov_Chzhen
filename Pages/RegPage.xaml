@@ -98,11 +98,10 @@
                     <!-- Выбор роли -->
                     <TextBlock Grid.Row="8" Grid.Column="0" Text="Роль" FontSize="14" Margin="0,0,10,5" VerticalAlignment="Center"/>
                     <ComboBox Grid.Row="8" Grid.Column="1" x:Name="comboBxRole"
-                          ToolTip="Выберите роль" Height="30" Margin="0,0,0,10" Width="300"
-                          HorizontalAlignment="Left"
-                          Background="White" Foreground="Black" BorderBrush="Gray"> 
-                        <ComboBoxItem Content="User" Foreground="Black"/>
-                        <ComboBoxItem Content="Admin" Foreground="Black"/>
+                              ToolTip="Выберите роль" Height="30" Margin="0,0,0,10" Width="300"
+                              HorizontalAlignment="Left">
+                        <ComboBoxItem Content="User"/>
+                        <ComboBoxItem Content="Admin"/>
                     </ComboBox>
 
                     <!-- CheckBox для отображения пароля -->

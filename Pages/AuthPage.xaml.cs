@@ -1,4 +1,5 @@
-﻿using System;
+﻿using _122_Zyamilov_Chzhen.Pages;
+using System;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -75,7 +76,7 @@ namespace _122_Zyamilov_Chzhen
                             NavigationService?.Navigate(new Pages.UserPage());
                             break;
                         case "Admin":
-                            //NavigationService?.Navigate(new AdminPage());
+                            NavigationService?.Navigate(new AdminPage());
                             break;
                     }
                 }
